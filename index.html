@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    <title>Drama Text Study Part 1</title>
+    <link rel="icon" type="image/x-icon" href="./assets/Logo_last.png" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: url("assets/Backgrounds.png");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            object-fit: cover;
+            min-height: 100vh;
+        }
+
+        #heading {
+            text-align: center;
+            background-color: whitesmoke;
+            padding: 10px 20px;
+            margin: 10px auto;
+            color: black;
+            font-size: 2em;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            width: fit-content;
+            border-radius: 10px;
+        }
+
+        .activity {
+            margin: 20px auto;
+            padding: 0 2%;
+            display: flex;
+            gap: 2%;
+            align-items: flex-start;
+        }
+
+        /* Question Buttons Sidebar - 6% */
+        .sidebar {
+            width: 100px;
+            height: fit-content;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            color: white;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .questionButtons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        
+       .qBtn {
+            padding: 12% 9%;
+            border: none;
+            border-radius: 10px;
+            background-color: #f5f5f5; /* Grayish white background */
+            color: black;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            width: 85%;
+            text-align: center;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8); /* Dark shadow bottom right */
+            position: relative;
+        }
+
+        .qBtn:hover {
+            background-color: #e8e8e8;
+            transform: translateY(-1px);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .qBtn.active {
+            background-color: #f5f5f5;
+            box-shadow: none; /* Remove shadow when active */
+            border: 3px solid #000; /* Dark black outline */
+            transform: translateY(2px); /* Pressed effect */
+        }
+
+        .qBtn:active {
+            box-shadow: none;
+            border: 3px solid #000;
+            transform: translateY(2px);
+        }
+
+        /* Story Section - 45% */
+        .storySection {
+            flex: 0 0 40%;
+            background: white;
+            border-radius: 20px;
+            padding: 15px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            max-height: 70vh;
+            min-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .storyContent {
+            font-size: 1.2em;
+           
+            color: #333;
+        }
+
+        .storyContent p {
+            margin-bottom: 15px;
+        }
+
+        .storyContent strong {
+            color: #667eea;
+        }
+
+        /* Question Section - 45% */
+        .questionSection {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+           
+        }
+
+        .questionContainer {
+            background: white;
+            border-radius: 20px;
+            padding: 15px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+             max-height: 70vh;
+            min-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .questionText {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            color: #333;
+            line-height: 1.4;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .optionGrid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .optionBtn {
+            padding: 15px 20px;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.3em;
+            text-align: center;
+            position: relative;
+        }
+
+        .optionBtn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .optionBtn.correct {
+            background: #d4edda;
+            border-color: #4CAF50;
+            color: #155724;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .optionBtn.incorrect {
+            background: #f8d7da;
+            border-color: #f44336;
+            color: #721c24;
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4);
+        }
+
+        .feedbackSection {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .feedbackText {
+            font-size: 1.2em;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .nextBtn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nextBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .finalScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border-radius: 20px;
+            color: white;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        /* Scrollbar styling */
+        .storySection::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .storySection::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .storySection::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .storySection::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        /* Question Container Scrollbar styling */
+        .questionContainer::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .questionContainer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .questionContainer::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .questionContainer::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+        /* Final full screen mode */
+.fullscreen-final .sidebar,
+.fullscreen-final .storySection {
+    display: none !important;
+}
+
+.fullscreen-final .questionSection {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.fullscreen-final .questionContainer {
+    max-height: none;
+    height: 70vh;
+}
+
+
+        /* Responsive design */
+        
+    </style>
+</head>
+
+<body>
+    <div>
+        <p id="heading">Drama Text Study Part 1</p>
+    </div>
+
+    <div class="activity">
+        <!-- Left Sidebar - Question Buttons (6%) -->
+        <div class="sidebar">
+            <div class="questionButtons" id="questionButtons"></div>
+        </div>
+
+        <!-- Middle - Story Section (45%) -->
+        <div class="storySection">
+            <div class="storyContent" id="storyContent"></div>
+        </div>
+
+        <!-- Right - Question Section (45%) -->
+        <div class="questionSection">
+            <div class="questionContainer">
+                <div id="questionContent" class="questionContent"></div>
+
+                <div class="finalScreen" id="finalScreen" style="display:none;">
+                    <div>
+                        <h2>🎉 Well Done!</h2>
+                        <p>You've completed all questions!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        let selectedAnswer = null;
+        let data = [
+  
+  
+  
+ 
+  
+  {
+    "questionNo": "Q1",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "Which of these lines from Passage 2 would the audience never hear spoken aloud?",
+    "options": [
+      "CATHLEEN: What is it you have?",
+      "NORA: It's a shirt and a plain stocking were got off a drowned man in Donegal.",
+      "(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)",
+      "NORA: We're to find out if it's Michael's they are."
+    ],
+    "correct": 2
+  },
+  {
+    "questionNo": "Q2",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "At the end of Passage 3, the door \"is blown open by a gust of wind\". Kavya was asked what the audience would experience at this moment. Which answer is correct?",
+    "options": [
+      "They would see the door burst open and sense the wind, a sharp reminder of the stormy sea outside.",
+      "They would hear an actor read out the words \"The door is blown open\".",
+      "A narrator would explain that the sisters are frightened of the storm.",
+      "Nothing, because stage directions are only for people reading the script."
+    ],
+    "correct": 0
+  },
+  {
+    "questionNo": "Q3",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "The opening stage direction in Passage 1 lists \"nets, oil-skins, spinning wheel\". Which job is this stage direction doing, and what does it show?",
+    "options": [
+      "Delivery: it tells the actors how to say their lines.",
+      "Movement: it shows where the characters walk on stage.",
+      "Character description: it tells us what Maurya looks like.",
+      "Setting: it shows a fishing family whose life depends on the sea."
+    ],
+    "correct": 3
+  },
+  {
+    "questionNo": "Q4",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "In Passage 2, \"CATHLEEN stops her wheel with a sudden movement, and leans out to listen.\" What does this stage direction show the audience?",
+    "options": [
+      "It tells the actor playing Cathleen to shout her next line.",
+      "Hearing the words \"drowned man\", Cathleen is struck by sudden shock and fear for her brother.",
+      "It describes the setting of the cottage kitchen.",
+      "It shows that Cathleen has grown bored of spinning."
+    ],
+    "correct": 1
+  },
+  {
+    "questionNo": "Q5",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "Nora's first line is \"(in a low voice) Where is she?\", and she then \"comes in softly\". Ishaan says this shows Nora is protective of her mother. Meher says it shows Nora is afraid of Cathleen. Who is correct?",
+    "options": [
+      "Only Ishaan, because Nora keeps quiet so that her mother will not hear the news she is bringing.",
+      "Only Meher, because Nora speaks quietly in front of her sister.",
+      "Both, because Nora is protective and afraid at the same time.",
+      "Neither, because a low voice shows nothing about a character."
+    ],
+    "correct": 0
+  },
+  {
+    "questionNo": "Q6",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "In Passage 6, Maurya enters \"speaking querulously\" (in a complaining, irritable way): \"Isn't it turf enough you have for this day and evening?\" What does this first line reveal about Maurya?",
+    "options": [
+      "She is calm and cheerful after a good night's sleep.",
+      "She knows about the hidden bundle and is angry about it.",
+      "She is irritable and anxious, and she keeps a close watch on everything in the house.",
+      "She is too ill to notice what is happening around her."
+    ],
+    "correct": 2
+  },
+  {
+    "questionNo": "Q7",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "In Passages 3 and 4, Nora keeps repeating the young priest's exact words, adding \"says he\". What does this show about the priest's position?",
+    "options": [
+      "Nora is mocking the priest by copying him.",
+      "His word carries great authority: the sisters follow his instructions and trust his comfort.",
+      "The priest has a lower position than the two sisters.",
+      "The priest is the brother Michael."
+    ],
+    "correct": 1
+  },
+  {
+    "questionNo": "Q8",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "Between the two sisters, who makes the decisions in Passages 5 and 6?",
+    "options": [
+      "Nora, because she is the one who brought the bundle",
+      "Maurya, because she orders them to hide the bundle",
+      "Neither, because the sisters argue and cannot agree",
+      "Cathleen, because Nora asks her permission and Cathleen decides to wait and to hide the bundle"
+    ],
+    "correct": 3
+  },
+  {
+    "questionNo": "Q9",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "Cathleen has just hidden the bundle when Maurya asks about the turf. Cathleen answers: \"There's a cake baking at the fire for a short space and Bartley will want it when the tide turns if he goes to Connemara.\" What is the subtext of her reply?",
+    "options": [
+      "She gives an ordinary reason to cover up what she was really doing.",
+      "She is angry with Bartley for leaving.",
+      "She secretly wants Maurya to find the bundle.",
+      "There is no subtext; she is simply talking about her baking."
+    ],
+    "correct": 0
+  },
+  {
+    "questionNo": "Q10",
+    "story": "<b>\"Riders to the Sea\"<br>by J. M. Synge</b><br><br><b>Passage 1</b><br>(Cottage kitchen, with nets, oil-skins, spinning wheel, some new boards standing by the wall, etc. CATHLEEN, a girl of about twenty, finishes kneading cake, and puts it down in the pot-oven by the fire; then wipes her hands, and begins to spin at the wheel. NORA, a young girl, puts her head in at the door.)<br>NORA: (in a low voice) Where is she?<br>CATHLEEN: She's lying down, God help her, and may be sleeping, if she's able.<br><br><b>Passage 2</b><br>(NORA comes in softly, and takes a bundle from under her shawl.)<br>CATHLEEN: (spinning the wheel rapidly) What is it you have?<br>NORA: The young priest is after bringing them. It's a shirt and a plain stocking were got off a drowned man in Donegal.<br>(CATHLEEN stops her wheel with a sudden movement, and leans out to listen.)<br>NORA: We're to find out if it's Michael's they are, some time herself will be down looking by the sea.<br>CATHLEEN: How would they be Michael's, Nora. How would he go the length of that way to the far north?<br><br><b>Passage 3</b><br>NORA: The young priest says he's known the like of it. \"If it's Michael's they are,\" says he, \"you can tell herself he's got a clean burial by the grace of God, and if they're not his, let no one say a word about them, for she'll be getting her death,\" says he, \"with crying and lamenting.\"<br>(The door which NORA half closed is blown open by a gust of wind.)<br><br><b>Passage 4</b><br>CATHLEEN: (looking out anxiously) Did you ask him would he stop Bartley going this day with the horses to the Galway fair?<br>NORA: \"I won't stop him,\" says he, \"but let you not be afraid. Herself does be saying prayers half through the night, and the Almighty God won't leave her destitute,\" says he, \"with no son living.\"<br>CATHLEEN: Is the sea bad by the white rocks, Nora?<br>NORA: Middling bad, God help us. There's a great roaring in the west, and it's worse it'll be getting when the tide's turned to the wind.<br><br><b>Passage 5</b><br>(She goes over to the table with the bundle.)<br>NORA: Shall I open it now?<br>CATHLEEN: Maybe she'd wake up on us, and come in before we'd done. (coming to the table) It's a long time we'll be, and the two of us crying.<br>NORA: (goes to the inner door and listens) She's moving about on the bed. She'll be coming in a minute.<br><br><b>Passage 6</b><br>CATHLEEN: Give me the ladder, and I'll put them up in the turf-loft, the way she won't know of them at all, and maybe when the tide turns she'll be going down to see would he be floating from the east.<br>(They put the ladder against the gable of the chimney; CATHLEEN goes up a few steps and hides the bundle in the turf-loft. MAURYA comes from the inner room.)<br>MAURYA: (looking up at CATHLEEN and speaking querulously) Isn't it turf enough you have for this day and evening?<br>CATHLEEN: There's a cake baking at the fire for a short space (throwing down the turf) and Bartley will want it when the tide turns if he goes to Connemara.",
+    "question": "In Passage 4, straight after asking whether the priest would stop Bartley going, Cathleen asks: \"Is the sea bad by the white rocks, Nora?\" What does Cathleen really mean beneath this question?",
+    "options": [
+      "She wants to go down to the sea to swim.",
+      "She is worried that the family's nets will be damaged.",
+      "She is afraid that Bartley could drown if he sails today.",
+      "She is planning to go to the Galway fair herself."
+    ],
+    "correct": 2
+  }
+
+
+
+]
+
+        window.onload = () => {
+            renderButtons();
+            renderStory();
+            renderQuestion();
+        };
+
+        function renderButtons() {
+            const container = document.getElementById('questionButtons');
+            container.innerHTML = '';
+            data.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.innerText = item.questionNo;
+                btn.className = 'qBtn' + (index === currentIndex ? ' active' : '');
+                btn.onclick = () => {
+                    currentIndex = index;
+                    selectedAnswer = null;
+                    renderStory();
+                    renderQuestion();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function renderStory() {
+            const storyContent = document.getElementById('storyContent');
+            const q = data[currentIndex];
+            
+            if (q.story && Array.isArray(q.story)) {
+                storyContent.innerHTML = q.story.join('');
+            } else if (q.story) {
+                storyContent.innerHTML = q.story;
+            } else {
+                storyContent.innerHTML = '<p>No story content available.</p>';
+            }
+        }
+
+        function renderQuestion() {
+            const questionContent = document.getElementById('questionContent');
+            const finalScreen = document.getElementById('finalScreen');
+
+            if (currentIndex >= data.length) {
+    questionContent.style.display = 'none';
+    finalScreen.style.display = 'flex';
+
+    // Enable full screen final view
+    document.querySelector('.activity').classList.add('fullscreen-final');
+
+    return;
+}
+
+
+            const q = data[currentIndex];
+            let html = '';
+
+            html += `<h3 class='questionText'>${q.question}</h3>`;
+            html += `<div class="optionGrid">`;
+            
+            q.options.forEach((opt, idx) => {
+                html += `<button class="optionBtn" onclick="handleOptionClick(${idx})">${opt}</button>`;
+            });
+
+            html += `</div>`;
+            html += `<div class="feedbackSection">
+                        <p class="feedbackText" id="feedbackText"></p>
+                        <button class="nextBtn" id="nextBtn" style="display:none;" onclick="handleNext()">Next</button>
+                     </div>`;
+
+            questionContent.innerHTML = html;
+            questionContent.style.display = 'block';
+            finalScreen.style.display = 'none';
+            renderButtons();
+        }
+
+        function handleOptionClick(index) {
+            if (selectedAnswer !== null) return;
+
+            selectedAnswer = index;
+            const q = data[currentIndex];
+            const feedback = document.getElementById('feedbackText');
+            const nextBtn = document.getElementById('nextBtn');
+            const optionBtns = document.querySelectorAll('.optionBtn');
+
+            optionBtns.forEach((btn) => {
+                btn.style.pointerEvents = 'none';
+            });
+
+            if (index === q.correct) {
+                optionBtns[index].classList.add('correct');
+                feedback.innerHTML = `<span class='emoji'>✅</span> Correct! Great job!`;
+                feedback.style.color = '#4CAF50';
+                nextBtn.innerText = currentIndex + 1 < data.length ? 'Next' : 'Finish';
+                nextBtn.style.display = 'block';
+            } else {
+                optionBtns[index].classList.add('incorrect');
+                feedback.innerHTML = `<span class='emoji'>❌</span> Try again!`;
+                feedback.style.color = '#f44336';
+
+                optionBtns.forEach((btn, idx) => {
+                    if (idx !== index) {
+                        btn.style.pointerEvents = 'auto';
+                    }
+                });
+                selectedAnswer = null;
+            }
+        }
+
+        function handleNext() {
+            if (currentIndex + 1 < data.length) {
+                currentIndex++;
+                selectedAnswer = null;
+                renderStory();
+                renderQuestion();
+            } else {
+                currentIndex++;
+                renderQuestion();
+            }
+        }
+    </script>
+</body>
+
+</html>
